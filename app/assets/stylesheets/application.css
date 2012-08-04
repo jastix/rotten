@@ -64,3 +64,6 @@ h1.title#rotten_title {
   font-size: 4em;
   color: #FF0000;
 }
+table#movies th.hilite {
+  background-color: yellow;
+}
