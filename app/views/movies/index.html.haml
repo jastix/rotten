@@ -9,9 +9,9 @@
 %table#movies
   %thead
     %tr
-      %th#title_header{:class => ("hilite" if @sort == "title")}= link_to "Movie Title", {:sort => "title", :ratings => @checked_ratings}
+      %th{:class => ("hilite" if @sort == "title")}= link_to "Movie Title", {:id => "title_header", :sort => "title", :ratings => @checked_ratings}
       %th Rating
-      %th#release_date_header{:class => ("hilite" if @sort == "release_date")}= link_to "Release Date", {:sort => "release_date", :ratings => @checked_ratings}
+      %th{:class => ("hilite" if @sort == "release_date")}= link_to "Release Date", {:id => "release_date_header", :sort => "release_date", :ratings => @checked_ratings}
       %th More Info
   %tbody
     - @movies.each do |movie|
