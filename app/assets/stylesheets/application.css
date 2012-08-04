@@ -59,3 +59,8 @@ form label {
   font-weight: bold;
   color: maroon;
 }
+
+h1.title#rotten_title {
+  font-size: 4em;
+  color: #FF0000;
+}
