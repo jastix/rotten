@@ -5,13 +5,13 @@
   - @all_ratings.each do |rating|
     = rating
     = check_box_tag "ratings[#{rating}]", 1, (true if @checked_ratings.include?(rating))
-  = submit_tag 'Refresh'
+  #ratings_submit= submit_tag 'Refresh'
 %table#movies
   %thead
     %tr
-      %th#title_header{:class => ("hilite" if @sort == "title")}= link_to "Movie Title", :sort => "title"
+      %th#title_header{:class => ("hilite" if @sort == "title")}= link_to "Movie Title", {:sort => "title", :ratings => @checked_ratings}
       %th Rating
-      %th#release_date_header{:class => ("hilite" if @sort == "release_date")}= link_to "Release Date", :sort => "release_date", :class => "hilite"
+      %th#release_date_header{:class => ("hilite" if @sort == "release_date")}= link_to "Release Date", {:sort => "release_date", :ratings => @checked_ratings}
       %th More Info
   %tbody
     - @movies.each do |movie|
