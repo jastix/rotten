@@ -9,33 +9,43 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.get_ratings
-    @checked_ratings = params[:ratings]
-    @sort = params[:sort]
+    @checked_ratings = params[:ratings] ||= session[:ratings] ||= {}
+    @sort = params[:sort] ||= session[:sort]
 
-    if @checked_ratings == nil and @sort == nil
-      @checked_ratings = session[:ratings]
-      @sort = session[:sort]
-      flash.keep
-      redirect_to :action => "index", :sort => @sort, :ratings => @checked_ratings if @sort || @checked_ratings
+    redirect_options = {:sort => params[:sort], :ratings => params[:ratings]}
+    redirect = false
+
+
+    if !params[:sort] and session[:sort]
+      redirect = true
+      redirect_options[:sort] = session[:sort]
     end
     
+    if !params[:ratings] and session[:ratings]
+      redirect = true
+      redirect_options[:ratings] = session[:ratings]
+    end
 
-    if @checked_ratings
-      @movies = Movie.all(:order => @sorted, :conditions => {:rating => @checked_ratings.keys}) 
+    if redirect
+      redirect_to movies_path(redirect_options)
+      
+    end
+
+    if @checked_ratings.length > 0
+      @movies = Movie.all(:order => @sort, :conditions => {:rating => @checked_ratings.keys})
+      
     else
-      @checked_ratings = {}
-      @movies = Movie.all(:order => @sort)
+      @movies = Movie.all(:order => @sort, :conditions => {})
     end
-    
-    session[:sort] = @sort
-    session[:ratings] = @checked_ratings
+
+   
     
     
   end
 
   def new
     # default: render 'new' template
-    
+
   end
 
   def create
