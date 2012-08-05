@@ -9,14 +9,33 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.get_ratings
-    @checked_ratings =  params[:ratings].nil? ? [] : (params[:ratings].respond_to?("keys") ? params[:ratings].keys : params[:ratings])
-    @movies = Movie.all(:order => params[:sort], :conditions => {:rating => @checked_ratings})
+    @checked_ratings = params[:ratings]
     @sort = params[:sort]
+
+    if @checked_ratings == nil and @sort == nil
+      @checked_ratings = session[:ratings]
+      @sort = session[:sort]
+      flash.keep
+      redirect_to :action => "index", :sort => @sort, :ratings => @checked_ratings if @sort || @checked_ratings
+    end
+    
+
+    if @checked_ratings
+      @movies = Movie.all(:order => @sorted, :conditions => {:rating => @checked_ratings.keys}) 
+    else
+      @checked_ratings = {}
+      @movies = Movie.all(:order => @sort)
+    end
+    
+    session[:sort] = @sort
+    session[:ratings] = @checked_ratings
+    
     
   end
 
   def new
     # default: render 'new' template
+    
   end
 
   def create
