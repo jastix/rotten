@@ -9,8 +9,23 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.get_ratings
-    @checked_ratings = params[:ratings] ||= session[:ratings] ||= {}
-    @sort = params[:sort] ||= session[:sort]
+
+    if params[:ratings]
+      session[:ratings] = params[:ratings]
+      @checked_ratings = params[:ratings]
+    elsif session[:ratings]
+      @checked_ratings = session[:ratings]
+    else
+      @checked_ratings = {}
+    end
+
+    if params[:sort]
+      session[:sort] = params[:sort]
+      @sort = params[:sort]
+    else
+      @sort = session[:sort]
+    end    
+      
 
     redirect_options = {:sort => params[:sort], :ratings => params[:ratings]}
     redirect = false
@@ -32,10 +47,10 @@ class MoviesController < ApplicationController
     end
 
     if @checked_ratings.length > 0
-      @movies = Movie.all(:order => @sort, :conditions => {:rating => @checked_ratings.keys})
+      @movies = Movie.order(@sort).where({:rating => @checked_ratings.keys})
       
     else
-      @movies = Movie.all(:order => @sort, :conditions => {})
+      @movies = Movie.order(@sort)
     end
 
    
